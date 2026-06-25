@@ -33,6 +33,7 @@ export default async function PortfolioPage() {
   const projects = dbProjects
     ? dbProjects.map((p) => ({
         id: p.id,
+        slug: p.slug || p.id,
         title: p.title,
         category: p.category || "Other",
         result: p.result || "",

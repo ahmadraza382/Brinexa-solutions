@@ -21,13 +21,13 @@ export async function POST(request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { title, category, result, cover_image, icon, published } = body;
+  const { title, slug, category, result, tagline, challenge, solution, services, metrics, testimonial, cover_image, icon, published } = body;
 
   if (!title) return NextResponse.json({ error: "Title is required." }, { status: 400 });
 
   const { data, error } = await supabase
     .from("projects")
-    .insert([{ title, category, result, cover_image, icon: icon || "Star", published: published ?? false }])
+    .insert([{ title, slug, category, result, tagline, challenge, solution, services: services || [], metrics: metrics || [], testimonial: testimonial || null, cover_image, icon: icon || "Star", published: published ?? false }])
     .select()
     .single();
 
