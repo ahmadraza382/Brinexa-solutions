@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brinexa Solutions — Premium Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+tailwind.config={theme:{extend:{
+ colors:{brand:{purple:'#6C3FD4',cyan:'#00C9A7',dark:'#0D0D0D',navy:'#1A1A2E',border:'#2E2E4A'}},
+ fontFamily:{heading:['Poppins','sans-serif'],body:['Inter','sans-serif']}}}}
+</script>
+<style>
+ :root{color-scheme:dark}*{box-sizing:border-box}html{scroll-behavior:smooth}
+ body{background:#0D0D0D;color:#fff;font-family:Inter,sans-serif;margin:0;overflow-x:hidden}
+ h1,h2,h3,h4{font-family:Poppins,sans-serif}
+ ::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:#0D0D0D}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#6C3FD4,#00C9A7);border-radius:10px}
+ .gradient-text{background:linear-gradient(135deg,#6C3FD4,#00C9A7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+ .gradient-brand{background:linear-gradient(135deg,#6C3FD4,#00C9A7)}
+ .glass{background:rgba(255,255,255,.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:16px}
+ .surface{background:#1A1A2E;border:1px solid #2E2E4A;border-radius:16px}
+ .btn-primary{background:linear-gradient(135deg,#6C3FD4,#00C9A7);color:#fff;font-weight:600;padding:14px 36px;border-radius:50px;border:none;box-shadow:0 4px 20px rgba(108,63,212,.3);transition:all .3s;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+ .btn-primary:hover{transform:scale(1.03);box-shadow:0 0 30px rgba(108,63,212,.6)}
+ .btn-ghost{background:transparent;color:#fff;border:2px solid #6C3FD4;font-weight:600;padding:12px 34px;border-radius:50px;transition:all .3s;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+ .btn-ghost:hover{background:rgba(108,63,212,.12);box-shadow:0 0 24px rgba(108,63,212,.35)}
+ .badge{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;border-radius:100px;padding:6px 16px;background:rgba(108,63,212,.12);border:1px solid rgba(108,63,212,.3);color:#c9b8ff}
+ .icon-box{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(108,63,212,.2),rgba(0,201,167,.2));border:1px solid rgba(108,63,212,.3);font-size:22px}
+ .hero-glow{text-shadow:0 0 40px rgba(108,63,212,.4)}
+ .divider{height:1px;width:100%;background:linear-gradient(90deg,transparent,#6C3FD4,#00C9A7,transparent)}
+ .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+ .reveal.in{opacity:1;transform:none}
+ .container-x{max-width:1200px;margin:0 auto;padding:0 24px}
+ .banner{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,#6C3FD4,#00C9A7);color:#fff;text-align:center;font-size:13px;padding:8px 16px;font-weight:500}
+ /* 3D tilt card (21st.dev / Aceternity) */
+ .tilt-wrap{perspective:1000px}
+ .tilt{transform-style:preserve-3d;transition:transform .2s ease-linear;position:relative;height:100%}
+ .tilt .pop{transform:translateZ(40px);transition:transform .2s}
+ .tilt .pop-hi{transform:translateZ(70px);transition:transform .2s}
+ /* spotlight */
+ .spot{position:relative;overflow:hidden}
+ .spot::before{content:"";position:absolute;inset:-1px;border-radius:16px;opacity:0;transition:opacity .3s;background:radial-gradient(350px circle at var(--mx,50%) var(--my,50%),rgba(108,63,212,.28),transparent 70%);pointer-events:none;z-index:0}
+ .spot:hover::before{opacity:1}
+ .spot>*{position:relative;z-index:1}
+ /* infinite marquee (21st.dev infinite-moving-cards) */
+ @keyframes infscroll{to{transform:translate(calc(-50% - 0.75rem))}}
+ .scroller{overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent,#000 15%,#000 85%,transparent);mask-image:linear-gradient(to right,transparent,#000 15%,#000 85%,transparent)}
+ .scroller ul{display:flex;flex-wrap:nowrap;gap:24px;width:max-content;padding:16px 0;animation:infscroll 38s linear infinite}
+ .scroller:hover ul{animation-play-state:paused}
+ @keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+ .ticker{display:flex;width:max-content;gap:56px;animation:scrollx 30s linear infinite}
+ @keyframes pulseglow{0%,100%{opacity:.4}50%{opacity:.85}}.pulse{animation:pulseglow 4s ease-in-out infinite}
+ @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+ @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+ /* highlight-card (21st.dev) hover interactions */
+ .group{transition:transform .5s}
+ .group:hover{transform:scale(1.05) rotate(-1deg)}
+ .hl-card{transition:border-color .5s,box-shadow .5s}
+ .group:hover .hl-card{border-color:rgba(108,63,212,.4)!important;box-shadow:0 20px 60px rgba(108,63,212,.25)!important}
+ .hl-shimmer{transition:transform 1s}
+ .group:hover .hl-shimmer{transform:skewX(-12deg) translateX(-210%)!important}
+ .hl-icon{transition:transform .5s}
+ .group:hover .hl-icon{transform:rotate(12deg) scale(1.1)}
+ .hl-line{transition:all .5s}
+ .group:hover .hl-line{width:50%!important;height:4px!important}
+ @keyframes wordin{to{opacity:1;filter:blur(0);transform:none}}
+ .cnav{transition:background-color .3s}
+ .cnav:hover{background:#6C3FD4!important}
+ /* animated profile card (21st.dev) */
+ @keyframes apcspin{to{transform:rotate(360deg)}}
+ .apc-ring{animation:apcspin 6s linear infinite}
+ .apc{transition:transform .4s,border-color .5s,box-shadow .5s}
+ .apc-wrap:hover .apc{transform:translateY(-8px);border-color:rgba(108,63,212,.4)!important;box-shadow:0 20px 60px rgba(108,63,212,.2)}
+ .apc-avatar{transition:transform .5s}
+ .apc-wrap:hover .apc-avatar{transform:scale(1.1) rotate(6deg)}
+ .apc-cta{transition:all .3s}
+ .apc-wrap:hover .apc-cta{background:rgba(108,63,212,.15);box-shadow:0 0 24px rgba(108,63,212,.4);gap:12px}
+ /* premium stat cards */
+ .statc{transition:transform .3s,border-color .3s}
+ .statc:hover{transform:translateY(-6px);border-color:rgba(108,63,212,.4)!important}
+ .statc:hover .statc-glow{opacity:1!important}
+ .statc-icon{transition:transform .3s}
+ .statc:hover .statc-icon{transform:scale(1.1)}
+</style>
+</head>
+<body>
+<div class="banner">⚡ Premium preview (Home) — now with 21st.dev 3D tilt cards, spotlight & infinite carousel. Full site = the Next.js project (<code>npm run dev</code>).</div>
+
+<header id="nav" class="fixed left-0 right-0 z-40 transition-all duration-300" style="top:33px;background:rgba(13,13,13,.4);backdrop-filter:blur(20px)">
+  <nav class="container-x flex items-center justify-between" style="height:72px">
+    <a href="#" class="flex items-center gap-2">
+      <svg width="36" height="36" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 12px rgba(0,201,167,.35))"><defs><linearGradient id="bxgNav" x1="14" y1="8" x2="46" y2="60" gradientUnits="userSpaceOnUse"><stop stop-color="#36E0C4"/><stop offset=".5" stop-color="#23B6D9"/><stop offset="1" stop-color="#2A3A8C"/></linearGradient></defs><path d="M40 10 H22 a8 8 0 0 0 0 16 h12 l-4 8 H18 l16 12 v-2 l-8 -6 h12 a8 8 0 0 0 0 -16 H26 l4 -8 h14 z" fill="url(#bxgNav)"/><path d="M30 30 L42 30 L24 56 L29 37 L20 37 Z" fill="url(#bxgNav)" opacity=".92"/><rect x="12" y="20" width="5" height="5" rx="1.4" fill="#36E0C4"/><rect x="6" y="14" width="4" height="4" rx="1.2" fill="#36E0C4" opacity=".85"/><rect x="13" y="9" width="3.5" height="3.5" rx="1" fill="#2BD0CF" opacity=".7"/><rect x="4" y="24" width="3" height="3" rx=".8" fill="#36E0C4" opacity=".55"/></svg>
+      <span class="font-heading font-bold text-lg">Brinexa<span class="gradient-text"> Solutions</span></span>
+    </a>
+    <ul class="hidden lg:flex items-center gap-8 text-sm font-medium" style="color:#AAA">
+      <li><a href="#" style="color:#fff">Home</a></li><li><a href="#services">Services</a></li>
+      <li><a href="#why">Why Us</a></li><li><a href="#process">Process</a></li>
+      <li><a href="#stats">Results</a></li><li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <button class="btn-primary" style="padding:10px 24px;font-size:14px">Get a Quote</button>
+  </nav>
+</header>
+
+<section class="relative flex items-center justify-center overflow-hidden" style="min-height:100vh">
+  <canvas id="hero3d" class="absolute inset-0 w-full h-full"></canvas>
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at center,transparent 0%,rgba(13,13,13,.6) 70%,#0D0D0D 100%)"></div>
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+    <span class="font-heading font-extrabold whitespace-nowrap" style="font-size:clamp(6rem,22vw,22rem);letter-spacing:-.04em;color:rgba(255,255,255,.04)">BRINEXA</span>
+  </div>
+  <div class="container-x relative text-center" style="z-index:10;padding:128px 24px">
+    <div class="flex justify-center mb-6"><span class="badge">✦ Full-Service Digital Agency · Pakistan</span></div>
+    <h1 class="font-heading font-extrabold hero-glow" style="line-height:1.05;font-size:clamp(3rem,7vw,5.5rem)">Your Brand's New <span class="gradient-text">Best Friend</span></h1>
+    <p style="margin:28px auto 0;max-width:640px;color:#AAA;font-size:clamp(1rem,2vw,1.25rem)">From Brand Identity to Business Growth — We Handle Everything Digital So You Can Focus on What Matters.</p>
+    <div class="flex flex-wrap items-center justify-center gap-4" style="margin-top:40px">
+      <button class="btn-primary">Get a Free Consultation</button><button class="btn-ghost">See Our Work</button>
+    </div>
+  </div>
+  <div class="absolute" style="bottom:32px;left:50%;transform:translateX(-50%);z-index:10">
+    <div style="width:24px;height:40px;border:2px solid rgba(136,136,136,.4);border-radius:20px;display:flex;justify-content:center;padding-top:6px"><div style="width:4px;height:8px;border-radius:4px;background:#00C9A7;animation:bob 1.6s infinite"></div></div>
+  </div>
+</section>
+
+<section style="padding:40px 0;border-top:1px solid rgba(46,46,74,.6);border-bottom:1px solid rgba(46,46,74,.6);background:rgba(26,26,46,.3)">
+  <p class="text-center text-sm mb-6" style="color:#888">Trusted by brands across Pakistan &amp; beyond</p>
+  <div class="overflow-hidden relative"><div class="ticker font-heading font-bold text-xl" id="ticker" style="color:rgba(170,170,170,.6)"></div></div>
+</section>
+
+<section id="services" style="padding:100px 0">
+  <div class="container-x">
+    <div class="text-center reveal" style="max-width:768px;margin:0 auto">
+      <span class="badge mb-4">What We Do</span>
+      <h2 class="font-heading font-bold" style="font-size:clamp(1.8rem,4vw,3rem);margin-top:16px">Everything Your Brand Needs Under One Roof</h2>
+      <p style="margin-top:16px;color:#AAA">Hover the cards — 3D tilt + spotlight from 21st.dev.</p>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="serviceGrid" style="margin-top:56px"></div>
+  </div>
+</section>
+
+<section id="why" class="relative overflow-hidden" style="padding:100px 0">
+  <div class="absolute pulse" style="top:50%;left:-160px;width:400px;height:400px;border-radius:50%;background:#6C3FD4;filter:blur(120px);opacity:.2"></div>
+  <div class="container-x relative">
+    <div class="text-center reveal" style="max-width:768px;margin:0 auto"><span class="badge mb-4">Why Brinexa</span><h2 class="font-heading font-bold" style="font-size:clamp(1.8rem,4vw,3rem);margin-top:16px">We Don't Just Deliver Work — We Deliver Results</h2></div>
+    <div class="flex flex-wrap justify-center gap-8" id="whyGrid" style="margin-top:64px"></div>
+  </div>
+</section>
+
+<section id="process" style="padding:100px 0">
+  <div class="container-x">
+    <div class="text-center reveal" style="max-width:768px;margin:0 auto"><span class="badge mb-4">How We Work</span><h2 class="font-heading font-bold" style="font-size:clamp(1.8rem,4vw,3rem);margin-top:16px">A Simple Process That Delivers</h2></div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10" id="procGrid" style="margin-top:64px"></div>
+  </div>
+</section>
+
+<section id="stats" style="padding:100px 0"><div class="container-x"><div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="statGrid"></div></div></section>
+
+<section id="reviews" style="padding:100px 0">
+  <div class="container-x">
+    <div class="text-center reveal" style="max-width:768px;margin:0 auto"><span class="badge mb-4">Testimonials</span><h2 class="font-heading font-bold" style="font-size:clamp(1.8rem,4vw,3rem);margin-top:16px">What Our Clients Say</h2></div>
+    <div id="animTest" style="margin-top:56px"></div>
+  </div>
+</section>
+
+<section style="padding:100px 0">
+  <div class="container-x">
+    <div class="relative overflow-hidden reveal" style="border-radius:28px;border:1px solid #2E2E4A;padding:80px 24px;text-align:center;background:radial-gradient(ellipse at center,rgba(108,63,212,.18),rgba(26,26,46,.6))">
+      <div class="absolute pulse" style="top:-96px;left:25%;width:288px;height:288px;border-radius:50%;background:#6C3FD4;filter:blur(100px);opacity:.4"></div>
+      <div class="absolute pulse" style="bottom:-96px;right:25%;width:288px;height:288px;border-radius:50%;background:#00C9A7;filter:blur(100px);opacity:.3"></div>
+      <div class="relative">
+        <h2 class="font-heading font-bold" style="font-size:clamp(1.8rem,4vw,3rem);max-width:768px;margin:0 auto;line-height:1.2">Ready to Build Your Digital Future?</h2>
+        <p style="margin:16px auto 0;color:#AAA;font-size:1.125rem;max-width:560px">Let's jump on a free call and discuss your goals — no strings attached.</p>
+        <div class="flex flex-wrap items-center justify-center gap-4" style="margin-top:36px"><button class="btn-primary">Book a Free Call</button><button class="btn-ghost">💬 WhatsApp Us</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="border-top:1px solid #2E2E4A;background:#0D0D0D"><div class="divider"></div>
+  <div class="container-x" style="padding:48px 24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:center">
+    <div class="flex items-center gap-2"><svg width="36" height="36" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 12px rgba(0,201,167,.35))"><defs><linearGradient id="bxgFoot" x1="14" y1="8" x2="46" y2="60" gradientUnits="userSpaceOnUse"><stop stop-color="#36E0C4"/><stop offset=".5" stop-color="#23B6D9"/><stop offset="1" stop-color="#2A3A8C"/></linearGradient></defs><path d="M40 10 H22 a8 8 0 0 0 0 16 h12 l-4 8 H18 l16 12 v-2 l-8 -6 h12 a8 8 0 0 0 0 -16 H26 l4 -8 h14 z" fill="url(#bxgFoot)"/><path d="M30 30 L42 30 L24 56 L29 37 L20 37 Z" fill="url(#bxgFoot)" opacity=".92"/><rect x="12" y="20" width="5" height="5" rx="1.4" fill="#36E0C4"/><rect x="6" y="14" width="4" height="4" rx="1.2" fill="#36E0C4" opacity=".85"/><rect x="13" y="9" width="3.5" height="3.5" rx="1" fill="#2BD0CF" opacity=".7"/><rect x="4" y="24" width="3" height="3" rx=".8" fill="#36E0C4" opacity=".55"/></svg><span class="font-heading font-bold">Brinexa<span class="gradient-text"> Solutions</span></span></div>
+    <p class="text-sm" style="color:#888">© 2025 Brinexa Solutions. All rights reserved.</p>
+  </div>
+</footer>
+
+<a href="https://wa.me/923170796913" target="_blank" class="fixed flex items-center gap-2" style="bottom:24px;right:24px;z-index:60;background:#25D366;color:#fff;border-radius:9999px;padding:12px 20px;font-weight:500;box-shadow:0 8px 30px rgba(37,211,102,.4);text-decoration:none">
+  <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.69.25-1.29.18-1.41-.07-.12-.27-.2-.57-.35M12.05 21.8h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.89 6.99c0 5.45-4.44 9.89-9.88 9.89M20.52 3.45A11.78 11.78 0 0 0 12.05 0C5.46 0 .1 5.36.1 11.89c0 2.1.55 4.14 1.59 5.95L0 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.58 0 11.94-5.36 11.94-11.89a11.82 11.82 0 0 0-3.42-8.45"/></svg>
+  <span class="hidden sm:inline text-sm">Chat on WhatsApp</span>
+</a>
+
+<script>
+const SERVICES=[["🎨","Brand Identity & Design","Logos, brand kits, and visuals that speak for you"],["💻","Web Development","Fast, modern websites that convert visitors into clients"],["📈","Digital Marketing","Organic growth through content, SEO & social media"],["🎯","Paid Advertising","Meta, TikTok, Google, LinkedIn — ads that actually work"],["🛒","Amazon & eCommerce","Full account management, listings & PPC campaigns"],["🎬","Video Editing","Scroll-stopping reels, ads & brand videos"]];
+const WHY=[["🧩","End-to-end support","No need to hire multiple agencies — we handle everything under one roof."],["💬","Transparent communication","You're always in the loop, every step of the way."],["📊","Data-driven strategies","Every decision backed by real numbers, not guesses."],["🌍","Global-standard execution","A Pakistan-based team delivering world-class quality."],["💰","Affordable packages","Flexible plans for startups & growing brands."]];
+const PROC=[["01","Discover","We understand your brand, goals & target audience."],["02","Strategize","We build a custom plan tailored to your needs."],["03","Execute","Our team delivers with precision & creativity."],["04","Grow","We track, optimize & scale what works."]];
+const STATS=[[50,"+","Brands Served","💼"],[30,"+","Websites Launched","🚀"],[20,"+","Ad Campaigns Managed","📣"],[95,"%","Client Satisfaction Rate","⭐"]];
+const REVIEWS=[[5,"Brinexa completely transformed our brand. From the logo to our website to our ad campaigns — everything finally feels consistent and premium.","Ayesha Khan","Founder, Luxe Threads","https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80&auto=format&fit=crop&crop=faces"],[5,"Our Amazon sales doubled within three months. Their PPC management and listing optimization is genuinely next level.","Bilal Ahmed","CEO, NovaGoods","https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80&auto=format&fit=crop&crop=faces"],[5,"Finally an agency that communicates. Weekly reports, real results, and a team that actually cares about our growth.","Sara Malik","Marketing Lead, FitFuel","https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=80&auto=format&fit=crop&crop=faces"]];
+const LOGOS=["Luxe Threads","NovaGoods","FitFuel","Zenith Co","Bloom & Co","Apex Media","Urban Cart","PrimePay"];
+const stars=n=>'<span style="color:#00C9A7">'+'★'.repeat(n)+'</span>';
+
+document.getElementById('ticker').innerHTML=[...LOGOS,...LOGOS].map(l=>`<span style="white-space:nowrap">${l}</span>`).join('');
+
+/* Service cards: 3D tilt + spotlight (21st.dev) */
+document.getElementById('serviceGrid').innerHTML=SERVICES.map(([i,t,d])=>`
+ <div class="apc-wrap reveal">
+   <div class="apc group relative overflow-hidden" style="height:100%;border-radius:16px;border:1px solid #2E2E4A;background:rgba(26,26,46,.6);backdrop-filter:blur(12px);padding:32px;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center">
+     <div class="absolute pulse" style="top:-64px;right:-48px;width:176px;height:176px;border-radius:50%;background:rgba(108,63,212,.3);filter:blur(48px)"></div>
+     <div class="absolute pulse" style="bottom:-80px;left:-48px;width:176px;height:176px;border-radius:50%;background:rgba(0,201,167,.2);filter:blur(48px);animation-delay:1.5s"></div>
+     <div class="relative" style="width:96px;height:96px;margin-bottom:24px;z-index:1">
+       <div class="apc-ring" style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,#6C3FD4,#00C9A7,#6C3FD4,#00C9A7,#6C3FD4)"></div>
+       <div class="apc-avatar flex items-center justify-center" style="position:absolute;inset:3px;border-radius:50%;background:#0D0D0D;font-size:30px">${i}</div>
+       <span style="position:absolute;bottom:6px;right:6px;width:16px;height:16px;border-radius:50%;border:2px solid #0D0D0D;background:#00C9A7;z-index:2"></span>
+     </div>
+     <h4 class="font-heading font-semibold text-xl" style="position:relative;z-index:1">${t}</h4>
+     <span class="badge" style="margin:8px 0 16px;position:relative;z-index:1">Service</span>
+     <p class="text-sm" style="color:#AAA;line-height:1.6;margin-bottom:24px;position:relative;z-index:1">${d}</p>
+     <span class="apc-cta" style="margin-top:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(108,63,212,.4);border-radius:9999px;padding:8px 20px;font-size:14px;font-weight:500;color:#fff;position:relative;z-index:1">Learn More →</span>
+   </div>
+ </div>`).join('');
+
+document.getElementById('whyGrid').innerHTML=WHY.map(([i,t,d])=>`
+ <div class="group reveal" style="cursor:pointer">
+   <div class="hl-card relative overflow-hidden" style="width:350px;max-width:100%;border-radius:16px;border:1px solid rgba(108,63,212,.15);background:linear-gradient(135deg,#0D0D0D,#1A1A2E,#0D0D0D);box-shadow:0 20px 60px rgba(0,0,0,.5)">
+     <div class="absolute inset-0" style="z-index:0;overflow:hidden">
+       <div class="absolute inset-0" style="background:linear-gradient(to top right,rgba(108,63,212,.05),rgba(0,201,167,.1));opacity:.4"></div>
+       <div class="absolute" style="bottom:-80px;left:-80px;width:192px;height:192px;border-radius:50%;background:radial-gradient(circle,rgba(108,63,212,.25),transparent);filter:blur(48px)"></div>
+       <div class="absolute animate-ping" style="top:40px;left:40px;width:64px;height:64px;border-radius:50%;background:rgba(108,63,212,.1);filter:blur(12px)"></div>
+       <div class="absolute animate-ping" style="bottom:64px;right:64px;width:48px;height:48px;border-radius:50%;background:rgba(0,201,167,.1);filter:blur(10px)"></div>
+       <div class="hl-shimmer absolute inset-0" style="background:linear-gradient(to right,transparent,rgba(255,255,255,.06),transparent);transform:skewX(-12deg) translateX(110%)"></div>
+     </div>
+     <div class="relative" style="z-index:10;padding:32px;display:flex;flex-direction:column;align-items:center;text-align:center">
+       <div class="relative" style="margin-bottom:24px;width:80px;height:80px">
+         <div class="absolute inset-0 animate-ping" style="border-radius:50%;border:2px solid rgba(108,63,212,.3)"></div>
+         <div class="absolute inset-0 animate-pulse" style="border-radius:50%;border:1px solid rgba(0,201,167,.2)"></div>
+         <div class="hl-icon absolute inset-0 flex items-center justify-center" style="border-radius:50%;border:1px solid rgba(108,63,212,.25);background:linear-gradient(135deg,rgba(0,0,0,.85),rgba(26,26,46,.6));font-size:30px">${i}</div>
+       </div>
+       <h3 class="font-heading gradient-text" style="margin-bottom:14px;font-size:1.5rem;font-weight:700">${t}</h3>
+       <p class="text-sm" style="color:#AAA;line-height:1.6;max-width:24rem">${d}</p>
+       <div class="hl-line" style="margin-top:24px;width:33%;height:2px;background:linear-gradient(to right,transparent,#00C9A7,transparent);border-radius:9999px"></div>
+       <div class="flex" style="gap:8px;margin-top:16px;opacity:.6">
+         <div class="animate-bounce" style="width:8px;height:8px;background:#6C3FD4;border-radius:50%"></div>
+         <div class="animate-bounce" style="width:8px;height:8px;background:#00C9A7;border-radius:50%;animation-delay:.1s"></div>
+         <div class="animate-bounce" style="width:8px;height:8px;background:#6C3FD4;border-radius:50%;animation-delay:.2s"></div>
+       </div>
+     </div>
+   </div>
+ </div>`).join('');
+
+document.getElementById('procGrid').innerHTML=PROC.map(([n,t,d])=>`
+ <div class="reveal text-center">
+   <div style="margin:0 auto 24px;width:68px;height:68px;border-radius:50%;background:#1A1A2E;border:1px solid #2E2E4A;display:flex;align-items:center;justify-content:center"><span class="font-heading font-extrabold text-2xl gradient-text">${n}</span></div>
+   <h4 class="font-heading font-semibold text-lg" style="margin-bottom:8px">${t}</h4><p class="text-sm" style="color:#AAA;line-height:1.6;max-width:220px;margin:0 auto">${d}</p>
+ </div>`).join('');
+
+document.getElementById('statGrid').innerHTML=STATS.map(([v,s,l,ic])=>`
+ <div class="statc group relative overflow-hidden text-center" style="border-radius:16px;border:1px solid #2E2E4A;background:rgba(26,26,46,.5);backdrop-filter:blur(12px);padding:28px 16px">
+   <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#6C3FD4,#00C9A7);opacity:.6"></div>
+   <div class="statc-glow" style="position:absolute;top:-48px;left:50%;transform:translateX(-50%);width:128px;height:128px;border-radius:50%;background:#6C3FD4;filter:blur(50px);opacity:0;transition:opacity .5s;pointer-events:none"></div>
+   <div style="position:relative">
+     <div class="statc-icon" style="margin:0 auto 14px;display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(108,63,212,.2),rgba(0,201,167,.2));border:1px solid rgba(108,63,212,.3);font-size:22px">${ic}</div>
+     <div class="font-heading font-extrabold gradient-text" style="font-size:clamp(2rem,5vw,3rem)"><span class="counter" data-v="${v}" data-s="${s}">0${s}</span></div>
+     <div class="text-sm" style="color:#AAA;margin-top:6px">${l}</div>
+   </div>
+ </div>`).join('');
+
+/* Animated testimonials carousel (21st.dev) */
+let active=0;
+const GAP=70, STICK=56;
+function imgStyle(index){
+ const isA=index===active, isL=(active-1+REVIEWS.length)%REVIEWS.length===index, isR=(active+1)%REVIEWS.length===index;
+ const base="position:absolute;width:100%;height:100%;object-fit:cover;border-radius:24px;border:1px solid rgba(108,63,212,.25);box-shadow:0 20px 60px rgba(0,0,0,.5);transition:all .8s cubic-bezier(.4,.2,.2,1);";
+ if(isA)return base+"z-index:3;opacity:1;transform:translateX(0) translateY(0) scale(1) rotateY(0deg)";
+ if(isL)return base+`z-index:2;opacity:1;transform:translateX(-${GAP}px) translateY(-${STICK}px) scale(.85) rotateY(15deg)`;
+ if(isR)return base+`z-index:2;opacity:1;transform:translateX(${GAP}px) translateY(-${STICK}px) scale(.85) rotateY(-15deg)`;
+ return base+"z-index:1;opacity:0;transform:scale(.8)";
+}
+function renderCircular(){
+ const [r,q,n,p,img]=REVIEWS[active];
+ const imgs=REVIEWS.map((t,i)=>`<img src="${t[4]}" alt="${t[2]}" draggable="false" style="${imgStyle(i)}">`).join('');
+ const words=q.split(' ').map((w,i)=>`<span style="display:inline-block;opacity:0;filter:blur(8px);transform:translateY(6px);animation:wordin .4s ease forwards;animation-delay:${(.03*i).toFixed(2)}s">${w}&nbsp;</span>`).join('');
+ document.getElementById('animTest').innerHTML=`
+ <div class="grid md:grid-cols-2 gap-12 items-center" style="max-width:1000px;margin:0 auto">
+   <div style="position:relative;width:100%;height:340px;perspective:1000px">${imgs}</div>
+   <div class="flex flex-col justify-between" style="min-height:280px">
+     <div>
+       <h3 class="font-heading font-bold" style="font-size:1.6rem">${n}</h3>
+       <p class="text-sm" style="color:#888;margin-bottom:18px">${p}</p>
+       <div style="margin-bottom:16px;font-size:16px">${stars(r)}</div>
+       <p key="${active}" style="font-size:clamp(1.05rem,2vw,1.3rem);color:#AAA;line-height:1.7">${words}</p>
+     </div>
+     <div class="flex gap-5" style="margin-top:36px">
+       <button onclick="nav(-1)" class="cnav surface" style="width:48px;height:48px;border-radius:50%;cursor:pointer;color:#fff;font-size:18px;border:1px solid #2E2E4A">←</button>
+       <button onclick="nav(1)" class="cnav surface" style="width:48px;height:48px;border-radius:50%;cursor:pointer;color:#fff;font-size:18px;border:1px solid #2E2E4A">→</button>
+     </div>
+   </div>
+ </div>`;
+}
+window.nav=d=>{active=(active+d+REVIEWS.length)%REVIEWS.length;renderCircular()};
+renderCircular();
+setInterval(()=>window.nav(1),5000);
+
+
+/* scroll reveal */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%3*.08)+'s';io.observe(el)});
+
+/* counters */
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const el=e.target,v=+el.dataset.v,s=el.dataset.s;let st=null;function tick(t){if(!st)st=t;const pr=Math.min((t-st)/1600,1);const ea=1-Math.pow(2,-10*pr);el.textContent=Math.round(ea*v)+s;if(pr<1)requestAnimationFrame(tick)}requestAnimationFrame(tick);cio.unobserve(el)}}),{threshold:.5});
+document.querySelectorAll('.counter').forEach(el=>cio.observe(el));
+
+/* 3D tilt interaction */
+document.querySelectorAll('.tilt-wrap').forEach(wrap=>{
+ const tilt=wrap.querySelector('.tilt');
+ wrap.addEventListener('mousemove',e=>{const r=wrap.getBoundingClientRect();const x=(e.clientX-r.left-r.width/2)/14;const y=(e.clientY-r.top-r.height/2)/14;tilt.style.transform=`rotateY(${x}deg) rotateX(${-y}deg)`;tilt.style.setProperty('--mx',(e.clientX-r.left)+'px');tilt.style.setProperty('--my',(e.clientY-r.top)+'px')});
+ wrap.addEventListener('mouseleave',()=>{tilt.style.transform='rotateY(0deg) rotateX(0deg)'});
+});
+
+/* nav bg on scroll */
+addEventListener('scroll',()=>{const n=document.getElementById('nav');if(scrollY>20){n.style.background='rgba(13,13,13,.9)';n.style.borderBottom='1px solid rgba(46,46,74,.6)'}else{n.style.background='rgba(13,13,13,.4)';n.style.borderBottom='1px solid transparent'}});
+
+/* 3D hero */
+(function(){if(!window.THREE)return;const canvas=document.getElementById('hero3d');const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);camera.position.z=14;const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));function size(){const h=canvas.parentElement;renderer.setSize(h.clientWidth,h.clientHeight);camera.aspect=h.clientWidth/h.clientHeight;camera.updateProjectionMatrix()}size();const COUNT=innerWidth<768?700:1400;const pos=new Float32Array(COUNT*3),col=new Float32Array(COUNT*3);const purple=new THREE.Color('#6C3FD4'),cyan=new THREE.Color('#00C9A7');for(let i=0;i<COUNT;i++){const i3=i*3;pos[i3]=(Math.random()-.5)*36;pos[i3+1]=(Math.random()-.5)*24;pos[i3+2]=(Math.random()-.5)*24;const c=Math.random()>.5?purple:cyan;col[i3]=c.r;col[i3+1]=c.g;col[i3+2]=c.b}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));const pts=new THREE.Points(g,new THREE.PointsMaterial({size:.08,vertexColors:true,transparent:true,opacity:.85,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(pts);const ico=new THREE.Mesh(new THREE.IcosahedronGeometry(3.2,1),new THREE.MeshBasicMaterial({color:'#6C3FD4',wireframe:true,transparent:true,opacity:.25}));scene.add(ico);const ico2=new THREE.Mesh(new THREE.IcosahedronGeometry(2.1,0),new THREE.MeshBasicMaterial({color:'#00C9A7',wireframe:true,transparent:true,opacity:.2}));scene.add(ico2);const m={x:0,y:0},tg={x:0,y:0};addEventListener('pointermove',e=>{tg.x=(e.clientX/innerWidth-.5)*2;tg.y=(e.clientY/innerHeight-.5)*2});addEventListener('resize',size);const clock=new THREE.Clock();(function loop(){const t=clock.getElapsedTime();m.x+=(tg.x-m.x)*.04;m.y+=(tg.y-m.y)*.04;pts.rotation.y=t*.04+m.x*.3;pts.rotation.x=m.y*.2;ico.rotation.x=t*.15;ico.rotation.y=t*.2;ico2.rotation.x=-t*.2;ico2.rotation.y=-t*.12;camera.position.x+=(m.x*1.5-camera.position.x)*.05;camera.position.y+=(-m.y*1.2-camera.position.y)*.05;camera.lookAt(scene.position);renderer.render(scene,camera);requestAnimationFrame(loop)})();})();
+</script>
+</body>
+</html>
