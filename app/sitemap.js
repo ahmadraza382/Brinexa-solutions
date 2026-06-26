@@ -1,4 +1,5 @@
-import { BLOG_POSTS, SERVICES } from "@/lib/siteData";
+import { BLOG_POSTS } from "@/lib/siteData";
+import { getServiceSlugs } from "@/lib/getServices";
 import { createClient } from "@supabase/supabase-js";
 
 const BASE = "https://brinexasolutions.com";
@@ -32,8 +33,9 @@ export default async function sitemap() {
     { url: `${BASE}/terms`, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  const servicePages = SERVICES.map((s) => ({
-    url: `${BASE}/services/${s.slug}`,
+  const serviceSlugs = await getServiceSlugs();
+  const servicePages = serviceSlugs.map((slug) => ({
+    url: `${BASE}/services/${slug}`,
     changeFrequency: "monthly",
     priority: 0.8,
   }));

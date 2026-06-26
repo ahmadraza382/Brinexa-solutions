@@ -9,7 +9,10 @@ import CTASection from "@/components/CTASection";
 import Button from "@/components/Button";
 import { CircularTestimonials } from "@/components/ui/circular-testimonials";
 import { ArrowRight } from "lucide-react";
-import { SERVICES, TESTIMONIALS } from "@/lib/siteData";
+import { getServices } from "@/lib/getServices";
+import { getTestimonials } from "@/lib/getSettings";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Brinexa Solutions | Your Brand's New Best Friend",
@@ -17,7 +20,10 @@ export const metadata = {
     "Full-service digital agency offering branding, web development, digital marketing, paid ads & Amazon management in Pakistan.",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const services = await getServices();
+  const testimonials = await getTestimonials();
+
   return (
     <>
       <HomeHero />
@@ -32,7 +38,7 @@ export default function HomePage() {
             subtitle="Six core services, one accountable team — no more juggling freelancers."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-14">
-            {SERVICES.map((s, i) => (
+            {services.map((s, i) => (
               <ServiceCard key={s.slug} service={s} index={i} />
             ))}
           </div>
@@ -58,7 +64,7 @@ export default function HomePage() {
           />
           <div className="mt-16">
             <CircularTestimonials
-              testimonials={TESTIMONIALS.map((t) => ({
+              testimonials={testimonials.map((t) => ({
                 quote: t.quote,
                 name: t.name,
                 designation: t.position,

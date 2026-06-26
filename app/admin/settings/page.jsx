@@ -7,6 +7,7 @@ export default function SettingsPage() {
   const [site, setSite] = useState(null);
   const [socials, setSocials] = useState(null);
   const [testimonials, setTestimonials] = useState([]);
+  const [team, setTeam] = useState([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -15,10 +16,12 @@ export default function SettingsPage() {
       fetch("/api/admin/settings?key=site").then((r) => r.json()),
       fetch("/api/admin/settings?key=socials").then((r) => r.json()),
       fetch("/api/admin/settings?key=testimonials").then((r) => r.json()),
-    ]).then(([s, so, t]) => {
+      fetch("/api/admin/settings?key=team").then((r) => r.json()),
+    ]).then(([s, so, t, tm]) => {
       setSite(s.value || {});
       setSocials(so.value || {});
       setTestimonials(t.value || []);
+      setTeam(tm.value || []);
     });
   }, []);
 
@@ -26,7 +29,7 @@ export default function SettingsPage() {
   const updateSocial = (k) => (e) => setSocials((s) => ({ ...s, [k]: e.target.value }));
 
   const addTestimonial = () =>
-    setTestimonials((t) => [...t, { name: "", position: "", quote: "" }]);
+    setTestimonials((t) => [...t, { name: "", position: "", quote: "", image: "" }]);
 
   const updateTestimonial = (i, k) => (e) =>
     setTestimonials((t) =>
@@ -35,6 +38,17 @@ export default function SettingsPage() {
 
   const removeTestimonial = (i) =>
     setTestimonials((t) => t.filter((_, idx) => idx !== i));
+
+  const addTeamMember = () =>
+    setTeam((t) => [...t, { name: "", role: "", linkedin: "" }]);
+
+  const updateTeamMember = (i, k) => (e) =>
+    setTeam((t) =>
+      t.map((item, idx) => (idx === i ? { ...item, [k]: e.target.value } : item))
+    );
+
+  const removeTeamMember = (i) =>
+    setTeam((t) => t.filter((_, idx) => idx !== i));
 
   const handleSave = async () => {
     setSaving(true);
@@ -53,6 +67,11 @@ export default function SettingsPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: "testimonials", value: testimonials }),
+      }),
+      fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "team", value: team }),
       }),
     ]);
     setSaving(false);
@@ -157,27 +176,38 @@ export default function SettingsPage() {
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
             </div>
-            <input
-              type="text"
-              value={t.name || ""}
-              onChange={updateTestimonial(i, "name")}
-              placeholder="Client name"
-              className={inputClass}
-            />
-            <input
-              type="text"
-              value={t.position || ""}
-              onChange={updateTestimonial(i, "position")}
-              placeholder="Position, Company"
-              className={inputClass}
-            />
-            <textarea
-              rows={3}
-              value={t.quote || ""}
-              onChange={updateTestimonial(i, "quote")}
-              placeholder="Their testimonial quote…"
-              className={`${inputClass} resize-none`}
-            />
+            <input type="text" value={t.name || ""} onChange={updateTestimonial(i, "name")} placeholder="Client name" className={inputClass} />
+            <input type="text" value={t.position || ""} onChange={updateTestimonial(i, "position")} placeholder="Position, Company" className={inputClass} />
+            <input type="url" value={t.image || ""} onChange={updateTestimonial(i, "image")} placeholder="Avatar image URL (https://…)" className={inputClass} />
+            <textarea rows={3} value={t.quote || ""} onChange={updateTestimonial(i, "quote")} placeholder="Their testimonial quote…" className={`${inputClass} resize-none`} />
+          </div>
+        ))}
+      </div>
+      {/* Team Members */}
+      <div className="bg-[#1A1A2E] border border-[#2E2E4A] rounded-xl p-5 space-y-4">
+        <div className="flex items-center justify-between border-b border-[#2E2E4A] pb-3">
+          <p className="text-white font-semibold text-sm">Team Members</p>
+          <button
+            onClick={addTeamMember}
+            className="flex items-center gap-1.5 text-xs text-[#6C3FD4] hover:text-white transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" /> Add
+          </button>
+        </div>
+        {!team.length && (
+          <p className="text-[#555] text-sm">No team members yet. Click Add to create one.</p>
+        )}
+        {team.map((m, i) => (
+          <div key={i} className="bg-[#0D0D0D] border border-[#2E2E4A] rounded-xl p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-[#888] text-xs">Member {i + 1}</p>
+              <button onClick={() => removeTeamMember(i)} className="text-[#555] hover:text-red-400 transition-colors">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <input type="text" value={m.name || ""} onChange={updateTeamMember(i, "name")} placeholder="Full name" className={inputClass} />
+            <input type="text" value={m.role || ""} onChange={updateTeamMember(i, "role")} placeholder="Job title / role" className={inputClass} />
+            <input type="url" value={m.linkedin || ""} onChange={updateTeamMember(i, "linkedin")} placeholder="LinkedIn URL (https://linkedin.com/in/…)" className={inputClass} />
           </div>
         ))}
       </div>

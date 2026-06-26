@@ -31,15 +31,13 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo-mark.svg"
+                src="/logo.png"
                 alt="Brinexa Solutions"
                 width={36}
                 height={36}
-                className="w-9 h-9"
+                className="w-32 h-16 object-cover"
               />
-              <span className="font-heading font-bold text-lg">
-                Brinexa<span className="gradient-text"> Solutions</span>
-              </span>
+              
             </Link>
             <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
               {SITE.tagline} — your full-service digital partner for branding,

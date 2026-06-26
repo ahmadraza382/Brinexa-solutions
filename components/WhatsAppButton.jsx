@@ -10,7 +10,7 @@ export default function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
-      className="fixed bottom-6 right-6 z-[1050] flex items-center gap-3 rounded-full pl-4 pr-5 py-3 text-white font-medium group"
+      className="fixed bottom-16 right-6 z-[1050] flex items-center gap-3 rounded-full pl-4 pr-5 py-3 text-white font-medium group"
       style={{ background: "#25D366", boxShadow: "0 8px 30px rgba(37, 211, 102, 0.4)" }}
       initial={{ opacity: 0, scale: 0.6, y: 30 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}

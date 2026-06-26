@@ -4,7 +4,8 @@ import Reveal from "@/components/motion/Reveal";
 import Icon from "@/components/Icon";
 import Button from "@/components/Button";
 import CTASection from "@/components/CTASection";
-import { VALUES, TEAM } from "@/lib/siteData";
+import { VALUES } from "@/lib/siteData";
+import { getTeam } from "@/lib/getSettings";
 import { Target, Eye, Linkedin } from "lucide-react";
 
 export const metadata = {
@@ -13,7 +14,11 @@ export const metadata = {
     "Brinexa Solutions is a full-service digital agency from Pakistan dedicated to helping brands grow through design, marketing & technology.",
 };
 
-export default function AboutPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AboutPage() {
+  const team = await getTeam();
+
   return (
     <>
       <PageHero
@@ -126,7 +131,7 @@ export default function AboutPage() {
             subtitle="A small, senior team that treats your brand like our own."
           />
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-14">
-            {TEAM.map((m, i) => (
+            {team.map((m, i) => (
               <Reveal key={m.name} delay={(i % 4) * 0.1}>
                 <div className="surface-card p-6 text-center group">
                   <div className="relative mx-auto mb-5 w-24 h-24">
@@ -142,7 +147,9 @@ export default function AboutPage() {
                   </h4>
                   <p className="text-text-muted text-xs mt-1 mb-3">{m.role}</p>
                   <a
-                    href="#"
+                    href={m.linkedin || "#"}
+                    target={m.linkedin ? "_blank" : undefined}
+                    rel="noopener noreferrer"
                     aria-label={`${m.name} on LinkedIn`}
                     className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-brand-border text-text-secondary hover:text-white hover:border-brand-purple transition-all"
                   >

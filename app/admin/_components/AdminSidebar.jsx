@@ -16,6 +16,8 @@ import {
   ChevronRight,
   Menu,
   X,
+  Layers,
+  Tag,
 } from "lucide-react";
 
 const nav = [
@@ -30,6 +32,14 @@ const nav = [
     ],
   },
   { label: "Portfolio", href: "/admin/portfolio", icon: Briefcase },
+  {
+    label: "Services",
+    icon: Layers,
+    children: [
+      { label: "All Services", href: "/admin/services", icon: Layers },
+      { label: "Add Service", href: "/admin/services/new", icon: Tag },
+    ],
+  },
   {
     label: "Settings",
     icon: Settings,
@@ -127,7 +137,7 @@ export default function AdminSidebar() {
       <div className="flex items-center gap-3 px-4 py-4 border-b border-[#2E2E4A]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/Logo.jpeg"
+          src="/logo.png"
           alt="Brinexa Solutions"
           className={`rounded-lg object-contain transition-all ${collapsed ? "h-8 w-8" : "h-9 w-auto"}`}
         />
